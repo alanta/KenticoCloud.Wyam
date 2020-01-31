@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace KenticoCloud.Wyam.Metadata
+namespace Kontent.Wyam.Metadata
 {
     public interface IElementParser
     {

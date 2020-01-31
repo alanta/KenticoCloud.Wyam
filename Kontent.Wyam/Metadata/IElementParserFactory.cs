@@ -1,4 +1,4 @@
-﻿namespace KenticoCloud.Wyam.Metadata
+﻿namespace Kontent.Wyam.Metadata
 {
     /// <summary>
     /// Provides <see cref="IElementParser" /> instances for parsing content item metadata.

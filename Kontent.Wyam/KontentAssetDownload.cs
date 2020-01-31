@@ -5,18 +5,18 @@ using Wyam.Common.Execution;
 using Wyam.Common.Modules;
 using Wyam.Core.Modules.IO;
 
-namespace KenticoCloud.Wyam
+namespace Kontent.Wyam
 {
     /// <summary>
     /// Downloads all Kentico Cloud assets found in input documents.
     /// The downloaded assets can then be processed with modules such as <see cref="WriteFiles"/>.
     /// URLs are supplied with the <see cref="WithUris"/> method.
     /// </summary>
-    public class KenticoCloudAssetDownload : Download, IModule
+    public class KontentAssetDownload : Download, IModule
     {
         private DocumentConfig UriDocConfig;
 
-        public KenticoCloudAssetDownload WithUris(DocumentConfig uris)
+        public KontentAssetDownload WithUris(DocumentConfig uris)
         {
             UriDocConfig = uris;
             return this;

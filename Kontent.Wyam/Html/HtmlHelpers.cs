@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using KenticoCloud.Wyam.Models;
+using Kontent.Wyam.Models;
+using Kontent.Wyam;
 using Wyam.Common.Documents;
 
 namespace KenticoCloud.Wyam.Html
@@ -30,7 +31,7 @@ namespace KenticoCloud.Wyam.Html
                 return string.Empty;
             }
 
-            return Path.Combine("/", folderPath, KenticoCloudAssetHelper.GetAssetFileName(assetUrl)).Replace(@"\", "/");
+            return Path.Combine("/", folderPath, KontentAssetHelper.GetAssetFileName(assetUrl)).Replace(@"\", "/");
         }
     }
 }

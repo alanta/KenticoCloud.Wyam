@@ -1,4 +1,4 @@
-﻿namespace KenticoCloud.Wyam.Metadata
+﻿namespace Kontent.Wyam.Metadata
 {
     /// <inheritdoc />
     public class ElementParserFactory : IElementParserFactory

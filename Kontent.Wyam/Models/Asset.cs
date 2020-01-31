@@ -1,4 +1,4 @@
-﻿namespace KenticoCloud.Wyam.Models
+﻿namespace Kontent.Wyam.Models
 {
     public class Asset
     {

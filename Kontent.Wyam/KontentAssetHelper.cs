@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using KenticoCloud.Wyam.Models;
+using Kontent.Wyam.Models;
 using Wyam.Common.Documents;
 
-namespace KenticoCloud.Wyam
+namespace Kontent.Wyam
 {
-    public static class KenticoCloudAssetHelper
+    public static class KontentAssetHelper
     {
         public static string[] GetAssetUris(IDocument doc)
         {

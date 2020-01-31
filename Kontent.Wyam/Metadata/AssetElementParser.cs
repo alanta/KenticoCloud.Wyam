@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using Kontent.Wyam.Metadata;
+using System.Collections.Generic;
 using System.Linq;
-using KenticoCloud.Wyam.Models;
+using Kontent.Wyam.Models;
 using Newtonsoft.Json.Linq;
 
-namespace KenticoCloud.Wyam.Metadata
+namespace Kontent.Wyam.Metadata
 {
     /// <summary>
     /// Parses content item assets as a <see cref="List{Asset}">List&lt;Asset&gt;</see>.

@@ -1,0 +1,36 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Authors>Kristian Bortnik, Marnix van Valen</Authors>
+    <Company>Kontent.Wyam</Company>
+    <Description>Kentico Kontent module for Wyam. Fetch content and assets from Kontent headless CMS.</Description>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <Copyright>Kristian Bortnik, Marnix van Valen 2018-2020</Copyright>
+    <PackageProjectUrl>https://github.com/alanta/Kontent.Wyam</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/alanta/Kontent.Wyam</RepositoryUrl>
+    <RepositoryType>Github</RepositoryType>
+    <PackageTags>kontent wyam</PackageTags>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageIconUrl />
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Kentico.Kontent.Delivery" Version="13.0.0" />
+    <PackageReference Include="Wyam.Common" Version="2.2.9" />
+    <PackageReference Include="Wyam.Core" Version="2.2.9" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\icon.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+</Project>
