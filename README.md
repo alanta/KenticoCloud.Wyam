@@ -2,7 +2,7 @@
 
 ![CI](https://github.com/alanta/Kontent.Wyam/workflows/CI/badge.svg?branch=master)
 
-Module for retrieving [Kentico Kontent](https://kontent.io) content items, for generating static websites with [Wyam](https://wyam.io).
+Module for retrieving [Kentico Kontent](https://kontent.ai) content items, for generating static websites with [Wyam](https://wyam.io).
 
 ## Blog posts
 
