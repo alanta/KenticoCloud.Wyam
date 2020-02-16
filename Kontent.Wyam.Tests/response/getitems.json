@@ -1,0 +1,161 @@
+{
+  "items": [
+    {
+      "system": {
+        "id": "335d17ac-b6ba-4c6a-ae31-23c1193215cb",
+        "name": "My article",
+        "codename": "my_article",
+        "language": "en-US",
+        "type": "article",
+        "sitemap_locations": [
+          "string"
+        ],
+        "last_modified": "2019-03-27T13:21:11.38Z"
+      },
+      "elements": {
+        "title": {
+          "type": "text",
+          "name": "Title",
+          "value": "Welcome"
+        },
+        "body": {
+          "type": "rich_text",
+          "name": "Body",
+          "images": {},
+          "links": {},
+          "modular_content": [],
+          "value": "<p>This is a&nbsp;<strong>content item</strong>, which holds your content based on templates you define in your&nbsp;<strong>content types.</strong>&nbsp;To see how this one is defined, click&nbsp;<em>Content models</em>&nbsp;in the left menu and look at&nbsp;<em>Article—example content type</em>.</p>\n<p>In this content item, you can add the actual content that will be displayed in your final app. Your content can include formatted text and images.</p>\n<p><a href=\"https://docs.kontent.ai/tutorials/compose-and-link-content/create-content/composing-content-in-the-rich-text-editor#a-adding-images\" data-new-window=\"true\" target=\"_blank\" rel=\"noopener noreferrer\">Add an image</a>&nbsp;below this paragraph.</p>\n<p><br></p>\n<p>To make your content available outside of Kentico Kontent, click <strong>Change workflow or publish </strong>on the right of the screen and then&nbsp;<strong>Publish</strong>&nbsp;your content.</p>"
+        },
+        "property1": {
+          "type": "asset",
+          "name": "Teaser image",
+          "value": [
+            {
+              "name": "name-of-the-uploaded-file.jpg",
+              "type": "image/jpeg",
+              "size": 90895,
+              "description": "Description of what the asset represents.",
+              "url": "https://assets-us-01.kc-usercontent.com/975bf280-fd91-488c-994c-2f04416e5ee3/3e76909f-599f-4742-b472-77fd4b510e92/sources.jpg",
+              "width": 1000,
+              "height": 666
+            }
+          ]
+        },
+        "property2": {
+          "type": "asset",
+          "name": "Teaser image",
+          "value": [
+            {
+              "name": "name-of-the-uploaded-file.jpg",
+              "type": "image/jpeg",
+              "size": 90895,
+              "description": "Description of what the asset represents.",
+              "url": "https://assets-us-01.kc-usercontent.com/975bf280-fd91-488c-994c-2f04416e5ee3/3e76909f-599f-4742-b472-77fd4b510e92/sources.jpg",
+              "width": 1000,
+              "height": 666
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "modular_content": {
+    "property1": {
+      "system": {
+        "id": "335d17ac-b6ba-4c6a-ae31-23c1193215cb",
+        "name": "My article",
+        "codename": "my_article",
+        "language": "en-US",
+        "type": "article",
+        "sitemap_locations": [
+          "string"
+        ],
+        "last_modified": "2019-03-27T13:21:11.38Z"
+      },
+      "elements": {
+        "property1": {
+          "type": "asset",
+          "name": "Teaser image",
+          "value": [
+            {
+              "name": "name-of-the-uploaded-file.jpg",
+              "type": "image/jpeg",
+              "size": 90895,
+              "description": "Description of what the asset represents.",
+              "url": "https://assets-us-01.kc-usercontent.com/975bf280-fd91-488c-994c-2f04416e5ee3/3e76909f-599f-4742-b472-77fd4b510e92/sources.jpg",
+              "width": 1000,
+              "height": 666
+            }
+          ]
+        },
+        "property2": {
+          "type": "asset",
+          "name": "Teaser image",
+          "value": [
+            {
+              "name": "name-of-the-uploaded-file.jpg",
+              "type": "image/jpeg",
+              "size": 90895,
+              "description": "Description of what the asset represents.",
+              "url": "https://assets-us-01.kc-usercontent.com/975bf280-fd91-488c-994c-2f04416e5ee3/3e76909f-599f-4742-b472-77fd4b510e92/sources.jpg",
+              "width": 1000,
+              "height": 666
+            }
+          ]
+        }
+      }
+    },
+    "property2": {
+      "system": {
+        "id": "335d17ac-b6ba-4c6a-ae31-23c1193215cb",
+        "name": "My article",
+        "codename": "my_article",
+        "language": "en-US",
+        "type": "article",
+        "sitemap_locations": [
+          "string"
+        ],
+        "last_modified": "2019-03-27T13:21:11.38Z"
+      },
+      "elements": {
+        "property1": {
+          "type": "asset",
+          "name": "Teaser image",
+          "value": [
+            {
+              "name": "name-of-the-uploaded-file.jpg",
+              "type": "image/jpeg",
+              "size": 90895,
+              "description": "Description of what the asset represents.",
+              "url": "https://assets-us-01.kc-usercontent.com/975bf280-fd91-488c-994c-2f04416e5ee3/3e76909f-599f-4742-b472-77fd4b510e92/sources.jpg",
+              "width": 1000,
+              "height": 666
+            }
+          ]
+        },
+        "property2": {
+          "type": "asset",
+          "name": "Teaser image",
+          "value": [
+            {
+              "name": "name-of-the-uploaded-file.jpg",
+              "type": "image/jpeg",
+              "size": 90895,
+              "description": "Description of what the asset represents.",
+              "url": "https://assets-us-01.kc-usercontent.com/975bf280-fd91-488c-994c-2f04416e5ee3/3e76909f-599f-4742-b472-77fd4b510e92/sources.jpg",
+              "width": 1000,
+              "height": 666
+            }
+          ]
+        }
+      }
+    }
+  },
+  "pagination": {
+    "skip": 20,
+    "limit": 10,
+    "count": 10,
+    "total_count": 0,
+    "next_page": "https://deliver.kontent.ai/<project_id>/<resource>?limit=10&skip=30"
+  }
+}
