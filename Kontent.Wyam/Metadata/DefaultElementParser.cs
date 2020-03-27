@@ -2,11 +2,12 @@
 
 namespace Kontent.Wyam.Metadata
 {
-    public class DefaultElementParser : IElementParser
+    public static class DefaultElementParser
     {
-        public void ParseMetadata(List<KeyValuePair<string, object>> metadata, dynamic element)
+        public static bool TryParseMetadata(dynamic element, out KeyValuePair<string, object> metadata )
         {
-            metadata.Add(new KeyValuePair<string, object>(element.Name, element.Value.value));
+            metadata = new KeyValuePair<string, object>(element.Name, element.Value.value);
+            return true;
         }
     }
 }

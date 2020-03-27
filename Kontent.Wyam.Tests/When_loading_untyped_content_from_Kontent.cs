@@ -2,7 +2,13 @@ using FakeItEasy;
 using FluentAssertions;
 using Kontent.Wyam.Tests.Tools;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Reflection.Metadata;
+using System.Text;
+using Wyam.Common.Documents;
 using Wyam.Common.Execution;
 using Xunit;
 
@@ -23,11 +29,33 @@ namespace Kontent.Wyam.Tests
             var context = A.Fake<IExecutionContext>();
 
             // Act
-            var result = sut.Execute(null, context);
+            var result = sut.Execute(null, context).ToArray();
 
             // Assert
             result.Should().NotBeEmpty();
         }
+
+        [Fact]
+        public void It_should_correctly_set_the_default_content()
+        {
+            // Arrange
+            var responseJsonPath = Path.Combine(Environment.CurrentDirectory, $"response{Path.DirectorySeparatorChar}getitems.json");
+            var responseJson = File.ReadAllText(responseJsonPath);
+
+            var sut = new Kontent(MockDeliveryClient.Create(responseJson))
+                .WithContentField("body");
+
+            var context = A.Fake<IExecutionContext>();
+            // Act
+            var result = sut.Execute(null, context).ToArray();
+
+            // Assert
+            A.CallTo(() =>
+                    context.GetDocument(A<Stream>.Ignored, A<IEnumerable<KeyValuePair<string, object>>>.Ignored, true))
+                .MustHaveHappened();
+        }
+
+
     }
 }
 

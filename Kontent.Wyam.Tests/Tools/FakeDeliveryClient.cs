@@ -1,6 +1,7 @@
 ﻿using FakeItEasy;
 using Kentico.Kontent.Delivery;
 using Kentico.Kontent.Delivery.RetryPolicy;
+using Kentico.Kontent.Delivery.Builders.DeliveryClient;
 using RichardSzalay.MockHttp;
 using System;
 using System.Net.Http;
@@ -17,14 +18,24 @@ namespace Kontent.Wyam.Tests.Tools
         // based on https://github.com/Kentico/kontent-delivery-sdk-net/blob/13.0.0/Kentico.Kontent.Delivery.Tests/FakeHttpClientTests.cs
         // More info https://github.com/Kentico/kontent-delivery-sdk-net/wiki/Faking-responses
 
-        public static IDeliveryClient Create(string response)
+
+        public static IDeliveryClient Create(string response, ITypeProvider customTypeProvider )
         {
-            // Arrange
             const string testUrl = "https://tests.fake.url";
 
             var httpClient = MockHttpClient(testUrl, response);
             var deliveryOptions = MockDeliveryOptions(testUrl);
-            return CreateMockDeliveryClient(deliveryOptions, httpClient);
+            return CreateMockDeliveryClient(deliveryOptions, httpClient, cfg => cfg.WithTypeProvider( customTypeProvider ));
+
+        }
+
+        public static IDeliveryClient Create(string response)
+        {
+            const string testUrl = "https://tests.fake.url";
+
+            var httpClient = MockHttpClient(testUrl, response);
+            var deliveryOptions = MockDeliveryOptions(testUrl);
+            return CreateMockDeliveryClient(deliveryOptions, httpClient, null);
         }
 
         private static HttpClient MockHttpClient(string baseUrl, string response)
@@ -43,10 +54,10 @@ namespace Kontent.Wyam.Tests.Tools
                 .WithCustomEndpoint($"{baseUrl}/{{0}}")
                 .Build();
 
-        private static IDeliveryClient CreateMockDeliveryClient(DeliveryOptions deliveryOptions, HttpClient httpClient)
+        private static IDeliveryClient CreateMockDeliveryClient(DeliveryOptions deliveryOptions, HttpClient httpClient, Func<IOptionalClientSetup, IOptionalClientSetup> configureClient)
         {
-            var contentLinkUrlResolver = A.Fake<IContentLinkUrlResolver>();
-            var modelProvider = A.Fake<IModelProvider>();
+            //var contentLinkUrlResolver = A.Fake<IContentLinkUrlResolver>();
+            //var modelProvider = A.Fake<IModelProvider>();
             var retryPolicy = A.Fake<IRetryPolicy>();
             var retryPolicyProvider = A.Fake<IRetryPolicyProvider>();
             A.CallTo(() => retryPolicyProvider.GetRetryPolicy())
@@ -57,12 +68,21 @@ namespace Kontent.Wyam.Tests.Tools
             var client = DeliveryClientBuilder
                 .WithOptions(_ => deliveryOptions)
                 .WithHttpClient(httpClient)
-                .WithContentLinkUrlResolver(contentLinkUrlResolver)
-                .WithModelProvider(modelProvider)
+                //.WithContentLinkUrlResolver(contentLinkUrlResolver)
+                //.WithModelProvider(modelProvider)
+                .ApplyIfNotNull( configureClient )
                 .WithRetryPolicyProvider(retryPolicyProvider)
                 .Build();
 
             return client;
+        }
+    }
+
+    public static class Helpers
+    {
+        public static TBuilder ApplyIfNotNull<TBuilder>(this TBuilder builder, Func<TBuilder, TBuilder> configure)
+        {
+            return configure != null ? configure(builder) : builder;
         }
     }
 }

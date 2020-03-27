@@ -5,6 +5,7 @@ using Wyam.Common.Modules;
 using Kentico.Kontent.Delivery;
 using Kontent.Wyam.Metadata;
 using System;
+using Wyam.Core.Documents;
 
 namespace Kontent.Wyam
 {
@@ -14,15 +15,13 @@ namespace Kontent.Wyam
     public class Kontent : IModule
     {
         private readonly IDeliveryClient _client;
-        private readonly List<IQueryParameter> QueryParameters = new List<IQueryParameter>();
+        public List<IQueryParameter> QueryParameters { get; } = new List<IQueryParameter>();
 
-        private string contentField;
-        private readonly IElementParserFactory _elementParserFactory;
+        public string ContentField { get; set; }
 
         public Kontent(IDeliveryClient client)
         {
             _client = client ?? throw new ArgumentNullException(nameof(client));
-            _elementParserFactory = new ElementParserFactory();
         }
 
         private static IDeliveryClient CreateClient(string projectId)
@@ -63,82 +62,57 @@ namespace Kontent.Wyam
         }
 
 
-        /// <summary>
-        /// Sets the content type to retrieve.
-        /// </summary>
-        /// <param name="contentType">Code name of the content type to retrieve.</param>
-        /// <returns></returns>
-        public Kontent WithContentType(string contentType)
-        {
-            QueryParameters.Add(new EqualsFilter("system.type", contentType));
-            return this;
-        }
-
-        /// <summary>
-        /// Sets the main content field. This is case sensitive.
-        /// </summary>
-        /// <param name="field">Field</param>
-        /// <returns></returns>
-        public Kontent WithContentField(string field)
-        {
-            contentField = field;
-            return this;
-        }
-
-        /// <summary>
-        /// Sets the ordering for retrieved content items.
-        /// </summary>
-        /// <param name="field">Field to order by</param>
-        /// <param name="sortOrder">Sort order</param>
-        /// <returns></returns>
-        public Kontent OrderBy(string field, SortOrder sortOrder)
-        {
-            QueryParameters.Add(new OrderParameter(field, (Kentico.Kontent.Delivery.SortOrder)sortOrder));
-            return this;
-        }
-
         public IEnumerable<IDocument> Execute(IReadOnlyList<IDocument> inputs, IExecutionContext context)
         {
-            if( string.IsNullOrWhiteSpace(contentField))
-                throw new InvalidOperationException("Content field not set.");
-
             var items = _client.GetItemsAsync(QueryParameters).Result;
 
             foreach (var item in items.Items)
             {
-                var metadata = new List<KeyValuePair<string, object>>
-                {
-                    new KeyValuePair<string, object>("name", item.System.Name),
-                    new KeyValuePair<string, object>("codename", item.System.Codename)
-                };
+                yield return CreateDocument(context, item);
+            }
+        }
 
-                foreach (var element in item.Elements)
-                {
-                    string type = element.Value.type;
+        protected virtual IDocument CreateDocument(IExecutionContext context, ContentItem item)
+        {
+            var metadata = new List<KeyValuePair<string, object>>
+            {
+                new KeyValuePair<string, object>("name", item.System.Name),
+                new KeyValuePair<string, object>("codename", item.System.Codename)
+            };
 
-                    var parser = _elementParserFactory.GetParser(type);
-                    parser.ParseMetadata(metadata, element);
+            foreach (var element in item.Elements)
+            {
+                string type = element.Value.type;
+
+                KeyValuePair<string, object> metadataItem;
+                switch (type)
+                {
+                    case "asset":
+                        if (AssetElementParser.TryParseMetadata(element, out metadataItem)) metadata.Add(metadataItem);
+                        break;
+                    default:
+                        if (DefaultElementParser.TryParseMetadata(element, out metadataItem)) metadata.Add(metadataItem);
+                        break;
                 }
 
-                var content = item.GetString(contentField);
-                var doc = context.GetDocument(context.GetContentStream(content), metadata);
-
-                yield return doc;
+                metadata.Add(metadataItem);
             }
+
+            var content = string.IsNullOrWhiteSpace(ContentField) ? "" : item.GetString(ContentField);
+            
+            return context.GetDocument(context.GetContentStream(content), metadata);
         }
     }
 
-    public class Kontent<TPageModel> : IModule
+    public class Kontent<TPageModel> : Kontent
     {
-        private readonly IDeliveryClient _client;
-        private readonly List<IQueryParameter> _queryParameters = new List<IQueryParameter>();
-
-        private string _contentField;
-        private readonly IElementParserFactory _elementParserFactory;
-
-        public Kontent()
+        /// <summary>
+        /// Create a Kentico module using a specific Delivery client.
+        /// </summary>
+        /// <param name="client">A Kontent Delivery API client.</param>
+        public Kontent(IDeliveryClient client) : base(client)
         {
-            _elementParserFactory = new ElementParserFactory();
+            
         }
 
         /// <summary>
@@ -146,11 +120,8 @@ namespace Kontent.Wyam
         /// <seealso cref="!:https://developer.Kontent.com/docs/using-delivery-api#section-getting-project-id" />
         /// </summary>
         /// <param name="projectId">Kentico Cloud project ID</param>
-        public Kontent(string projectId) : this()
+        public Kontent(string projectId) : base( projectId)
         {
-            _client = DeliveryClientBuilder
-                    .WithProjectId(projectId)
-                    .Build();
         }
 
         /// <summary>
@@ -158,75 +129,27 @@ namespace Kontent.Wyam
         /// <seealso cref="!:https://developer.Kontent.com/docs/using-delivery-api#section-getting-project-id" />
         /// </summary>
         /// <param name="projectId">Kentico Cloud project ID</param>
-        public Kontent(string projectId, string previewApiKey) : this()
+        /// <param name="previewApiKey">The preview API.</param>
+        public Kontent(string projectId, string previewApiKey) : base(projectId, previewApiKey)
         {
-            _client = DeliveryClientBuilder.WithOptions(builder => builder
-                        .WithProjectId(projectId)
-                        .UsePreviewApi(previewApiKey)
-                        .Build())
-                    .Build();
         }
 
-
-        /// <summary>
-        /// Sets the content type to retrieve.
-        /// </summary>
-        /// <param name="contentType">Code name of the content type to retrieve.</param>
-        /// <returns></returns>
-        public Kontent<TPageModel> WithContentType(string contentType)
+        protected override IDocument CreateDocument(IExecutionContext context, ContentItem item)
         {
-            _queryParameters.Add(new EqualsFilter("system.type", contentType));
-            return this;
+            // TODO : fill the document
+            return new KontentDocument<TPageModel>(item);
+        }
+    }
+
+    public class KontentDocument<TPageModel> : CustomDocument
+    {
+        private readonly ContentItem _item;
+
+        public KontentDocument(ContentItem item)
+        {
+            _item = item;
         }
 
-        /// <summary>
-        /// Sets the main content field.
-        /// </summary>
-        /// <param name="field">Field</param>
-        /// <returns></returns>
-        public Kontent<TPageModel> WithContentField(string field)
-        {
-            _contentField = field;
-            return this;
-        }
-
-        /// <summary>
-        /// Sets the ordering for retrieved content items.
-        /// </summary>
-        /// <param name="field">Field to order by</param>
-        /// <param name="sortOrder">Sort order</param>
-        /// <returns></returns>
-        public Kontent<TPageModel> OrderBy(string field, SortOrder sortOrder)
-        {
-            _queryParameters.Add(new OrderParameter(field, (Kentico.Kontent.Delivery.SortOrder)sortOrder));
-            return this;
-        }
-
-        public IEnumerable<IDocument> Execute(IReadOnlyList<IDocument> inputs, IExecutionContext context)
-        {
-            var items = _client.GetItemsAsync(_queryParameters).Result;
-
-            foreach (var item in items.Items)
-            {
-                var metadata = new List<KeyValuePair<string, object>>
-                {
-                    new KeyValuePair<string, object>("name", item.System.Name),
-                    new KeyValuePair<string, object>("codename", item.System.Codename)
-                };
-
-                foreach (var element in item.Elements)
-                {
-                    string type = element.Value.type;
-
-                    var parser = _elementParserFactory.GetParser(type);
-                    parser.ParseMetadata(metadata, element);
-                }
-
-                var content = item.GetString(_contentField);
-                var doc = context.GetDocument(context.GetContentStream(content), metadata);
-
-                yield return doc;
-            }
-        }
+        public TPageModel Model => _item.CastTo<TPageModel>();
     }
 }
