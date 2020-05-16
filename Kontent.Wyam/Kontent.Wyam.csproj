@@ -17,7 +17,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Kentico.Kontent.Delivery" Version="13.0.0" />
+    <PackageReference Include="Kentico.Kontent.Delivery" Version="13.0.1" />
     <PackageReference Include="Wyam.Common" Version="2.2.9" />
     <PackageReference Include="Wyam.Core" Version="2.2.9" />
   </ItemGroup>

@@ -3,6 +3,7 @@ using Wyam.Common.Documents;
 using Wyam.Common.Execution;
 using Wyam.Common.Modules;
 using Kentico.Kontent.Delivery;
+using Kentico.Kontent.Delivery.Abstractions;
 using Kontent.Wyam.Metadata;
 using System;
 using Wyam.Core.Documents;

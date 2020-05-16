@@ -1,5 +1,7 @@
 ﻿using FakeItEasy;
 using Kentico.Kontent.Delivery;
+using Kentico.Kontent.Delivery.Abstractions;
+using Kentico.Kontent.Delivery.Abstractions.RetryPolicy;
 using Kentico.Kontent.Delivery.RetryPolicy;
 using Kentico.Kontent.Delivery.Builders.DeliveryClient;
 using RichardSzalay.MockHttp;
@@ -67,7 +69,7 @@ namespace Kontent.Wyam.Tests.Tools
 
             var client = DeliveryClientBuilder
                 .WithOptions(_ => deliveryOptions)
-                .WithHttpClient(httpClient)
+                .WithDeliveryHttpClient(new DeliveryHttpClient(httpClient))
                 //.WithContentLinkUrlResolver(contentLinkUrlResolver)
                 //.WithModelProvider(modelProvider)
                 .ApplyIfNotNull( configureClient )

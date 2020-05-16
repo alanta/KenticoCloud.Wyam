@@ -34,7 +34,7 @@ namespace Kontent.Wyam
         /// <returns></returns>
         public static Kontent OrderBy(this Kontent module, string field, SortOrder sortOrder)
         {
-            module.QueryParameters.Add(new OrderParameter(field, (Kentico.Kontent.Delivery.SortOrder)sortOrder));
+            module.QueryParameters.Add(new OrderParameter(field, (Kentico.Kontent.Delivery.Abstractions.SortOrder)sortOrder));
             return module;
         }
     }
