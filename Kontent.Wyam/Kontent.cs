@@ -6,6 +6,8 @@ using Kentico.Kontent.Delivery;
 using Kentico.Kontent.Delivery.Abstractions;
 using Kontent.Wyam.Metadata;
 using System;
+using System.ComponentModel;
+using Wyam.Common.Meta;
 using Wyam.Core.Documents;
 
 namespace Kontent.Wyam
@@ -15,30 +17,49 @@ namespace Kontent.Wyam
     /// </summary>
     public class Kontent : IModule
     {
-        private readonly IDeliveryClient _client;
-        public List<IQueryParameter> QueryParameters { get; } = new List<IQueryParameter>();
-
+        public string PreviewApiKey { get; set; }
+        public string ProductionApiKey { get; set; }
+        public string ProjectId { get; }
         public string ContentField { get; set; }
+        public string UrlField { get; set; }
+        public ITypeProvider TypeProvider { get; set; }
+        protected readonly Lazy<IDeliveryClient> Client;
+        public List<IQueryParameter> QueryParameters { get; } = new List<IQueryParameter>();
 
         public Kontent(IDeliveryClient client)
         {
-            _client = client ?? throw new ArgumentNullException(nameof(client));
+            if( client == null )
+                throw new ArgumentNullException($"{nameof(client)} must not be null");
+
+            Client = new Lazy<IDeliveryClient>(() => client);
         }
 
-        private static IDeliveryClient CreateClient(string projectId)
+        private IDeliveryClient CreateClient()
         {
-            return DeliveryClientBuilder
-                .WithProjectId(projectId)
-                .Build();
-        }
+            var builder = DeliveryClientBuilder
+                .WithOptions(options =>
+                {
+                    var opt2 = options.WithProjectId(ProjectId);
+                    if (!string.IsNullOrWhiteSpace(PreviewApiKey))
+                    {
+                        return opt2.UsePreviewApi(PreviewApiKey).Build();
+                    }
 
-        private static IDeliveryClient CreateClientWithPreview(string projectId, string previewApiKey)
-        {
-            return DeliveryClientBuilder.WithOptions(builder => builder
-                    .WithProjectId(projectId)
-                    .UsePreviewApi(previewApiKey)
-                    .Build())
-                .Build();
+                    if (!string.IsNullOrEmpty(ProductionApiKey))
+                    {
+                        return opt2.UseProductionApi(ProductionApiKey).Build();
+                    }
+
+                    return opt2.UseProductionApi().Build();
+
+                });
+
+            if (TypeProvider != null)
+            {
+                builder = builder.WithTypeProvider(TypeProvider);
+            }
+
+            return builder.Build();
         }
 
         /// <summary>
@@ -46,8 +67,7 @@ namespace Kontent.Wyam
         /// <seealso cref="!:https://developer.Kontent.com/docs/using-delivery-api#section-getting-project-id" />
         /// </summary>
         /// <param name="projectId">Kentico Cloud project ID</param>
-        public Kontent(string projectId) 
-            : this(CreateClient(projectId))
+        public Kontent(string projectId) : this(projectId, string.Empty)
         {
             
         }
@@ -57,15 +77,17 @@ namespace Kontent.Wyam
         /// <seealso cref="!:https://developer.Kontent.com/docs/using-delivery-api#section-getting-project-id" />
         /// </summary>
         /// <param name="projectId">Kentico Cloud project ID</param>
-        public Kontent(string projectId, string previewApiKey) 
-            : this(CreateClientWithPreview(projectId, previewApiKey))
+        public Kontent(string projectId, string previewApiKey)
         {
+            ProjectId = projectId;
+            PreviewApiKey = previewApiKey;
+            Client = new Lazy<IDeliveryClient>(CreateClient);
         }
 
 
-        public IEnumerable<IDocument> Execute(IReadOnlyList<IDocument> inputs, IExecutionContext context)
+        public virtual IEnumerable<IDocument> Execute(IReadOnlyList<IDocument> inputs, IExecutionContext context)
         {
-            var items = _client.GetItemsAsync(QueryParameters).Result;
+            var items = Client.Value.GetItemsAsync(QueryParameters).Result;
 
             foreach (var item in items.Items)
             {
@@ -92,16 +114,30 @@ namespace Kontent.Wyam
                         if (AssetElementParser.TryParseMetadata(element, out metadataItem)) metadata.Add(metadataItem);
                         break;
                     default:
-                        if (DefaultElementParser.TryParseMetadata(element, out metadataItem)) metadata.Add(metadataItem);
+                        if (DefaultElementParser.TryParseMetadata(element, out metadataItem))
+                        {
+                            if (string.Equals(metadataItem.Key, UrlField))
+                            {
+                                metadata.Add(new KeyValuePair<string, object>("url", metadataItem.Value));
+                            }
+
+                            metadata.Add(metadataItem);
+                        }
                         break;
                 }
 
+                
                 metadata.Add(metadataItem);
             }
 
             var content = string.IsNullOrWhiteSpace(ContentField) ? "" : item.GetString(ContentField);
             
             return context.GetDocument(context.GetContentStream(content), metadata);
+        }
+
+        public void UseModel<TModel>() where TModel : class
+        {
+            
         }
     }
 
@@ -135,7 +171,17 @@ namespace Kontent.Wyam
         {
         }
 
-        protected override IDocument CreateDocument(IExecutionContext context, ContentItem item)
+        public override IEnumerable<IDocument> Execute(IReadOnlyList<IDocument> inputs, IExecutionContext context)
+        {
+            var items = Client.Value.GetItemsAsync<TPageModel>(QueryParameters).Result;
+
+            foreach (var item in items.Items)
+            {
+                yield return CreateDocument(context, item);
+            }
+        }
+
+        protected IDocument CreateDocument(IExecutionContext context, TPageModel item)
         {
             // TODO : fill the document
             return new KontentDocument<TPageModel>(item);
@@ -144,13 +190,23 @@ namespace Kontent.Wyam
 
     public class KontentDocument<TPageModel> : CustomDocument
     {
-        private readonly ContentItem _item;
-
-        public KontentDocument(ContentItem item)
+        public KontentDocument(TPageModel item)
         {
-            _item = item;
+            Model = item;
+            
         }
 
-        public TPageModel Model => _item.CastTo<TPageModel>();
+        public TPageModel Model { get; }
+    }
+
+    internal static class BuilderExtensions
+    {
+        public static TBuilder Iif<TBuilder>(this TBuilder builder, bool predicate, Func<TBuilder, TBuilder> apply)
+        {
+            if (predicate)
+                return apply(builder);
+
+            return builder;
+        }
     }
 }
