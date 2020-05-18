@@ -6,9 +6,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection.Metadata;
-using System.Text;
-using Wyam.Common.Documents;
 using Wyam.Common.Execution;
 using Xunit;
 
@@ -24,7 +21,7 @@ namespace Kontent.Wyam.Tests
             var responseJson = File.ReadAllText(responseJsonPath);
 
             var sut = new Kontent(MockDeliveryClient.Create(responseJson))
-                .WithContentField("body");
+                .WithContentField("body_copy");
 
             var context = A.Fake<IExecutionContext>();
 
@@ -43,7 +40,7 @@ namespace Kontent.Wyam.Tests
             var responseJson = File.ReadAllText(responseJsonPath);
 
             var sut = new Kontent(MockDeliveryClient.Create(responseJson))
-                .WithContentField("body");
+                .WithContentField("body_copy");
 
             var context = A.Fake<IExecutionContext>();
             // Act

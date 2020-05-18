@@ -27,8 +27,8 @@ namespace Kontent.Wyam.Tests
             sut.Documents.Should().HaveCount(1);
             var metadata = sut.Documents.First().Metadata;
 
-            metadata.Get("title").ToString().Should().Be("Welcome");
-            metadata.Get("body").ToString().Should().Contain("content item");
+            metadata.Get("title").ToString().Should().Be("Coffee Beverages Explained");
+            metadata.Get("body_copy").ToString().Should().Contain("Espresso");
         }
 
         [Fact]
@@ -40,7 +40,7 @@ namespace Kontent.Wyam.Tests
             var sut = SetupWyamExecution(
 
                 // Assert    
-                docs => docs.First().Content.Should().Contain("content item") 
+                docs => docs.First().Content.Should().Contain("Espresso") 
                 );
             sut.Execute();
         }
@@ -63,7 +63,7 @@ namespace Kontent.Wyam.Tests
             var responseJsonPath = Path.Combine(Environment.CurrentDirectory, $"response{Path.DirectorySeparatorChar}getitems.json");
             var responseJson = File.ReadAllText(responseJsonPath);
             return new Kontent(MockDeliveryClient.Create(responseJson))
-                .WithContentField("body");
+                .WithContentField("body_copy");
         }
 
         private class TestModule : IModule

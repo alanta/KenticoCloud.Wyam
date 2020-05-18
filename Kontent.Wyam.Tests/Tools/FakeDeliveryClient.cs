@@ -2,7 +2,6 @@
 using Kentico.Kontent.Delivery;
 using Kentico.Kontent.Delivery.Abstractions;
 using Kentico.Kontent.Delivery.Abstractions.RetryPolicy;
-using Kentico.Kontent.Delivery.RetryPolicy;
 using Kentico.Kontent.Delivery.Builders.DeliveryClient;
 using RichardSzalay.MockHttp;
 using System;
@@ -21,25 +20,15 @@ namespace Kontent.Wyam.Tests.Tools
         // More info https://github.com/Kentico/kontent-delivery-sdk-net/wiki/Faking-responses
 
 
-        public static IDeliveryClient Create(string response, ITypeProvider customTypeProvider )
+        public static IDeliveryClient Create(string response, Func<IOptionalClientSetup, IOptionalClientSetup> configureClient = null)
         {
             const string testUrl = "https://tests.fake.url";
 
             var httpClient = MockHttpClient(testUrl, response);
             var deliveryOptions = MockDeliveryOptions(testUrl);
-            return CreateMockDeliveryClient(deliveryOptions, httpClient, cfg => cfg.WithTypeProvider( customTypeProvider ));
-
+            return CreateMockDeliveryClient(deliveryOptions, httpClient, configureClient);
         }
-
-        public static IDeliveryClient Create(string response)
-        {
-            const string testUrl = "https://tests.fake.url";
-
-            var httpClient = MockHttpClient(testUrl, response);
-            var deliveryOptions = MockDeliveryOptions(testUrl);
-            return CreateMockDeliveryClient(deliveryOptions, httpClient, null);
-        }
-
+        
         private static HttpClient MockHttpClient(string baseUrl, string response)
         {
             var mockHttp = new MockHttpMessageHandler();

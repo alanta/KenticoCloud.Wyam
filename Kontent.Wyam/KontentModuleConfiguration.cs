@@ -1,5 +1,6 @@
 ﻿using Kentico.Kontent.Delivery;
 using Kentico.Kontent.Delivery.Abstractions;
+using Kentico.Kontent.Delivery.Abstractions.InlineContentItems;
 
 namespace Kontent.Wyam
 {
@@ -49,13 +50,25 @@ namespace Kontent.Wyam
 
         public static Kontent WithTypeProvider(this Kontent module, ITypeProvider typeProvider)
         {
-            module.TypeProvider = typeProvider;
+            module.ConfigureClientActions.Add( builder => builder.WithTypeProvider( typeProvider ) );
             return module;
         }
 
         public static Kontent WithTypeProvider<TTypeProvider>(this Kontent module) where TTypeProvider : ITypeProvider, new()
         {
-            module.TypeProvider = new TTypeProvider();
+            module.ConfigureClientActions.Add(builder => builder.WithTypeProvider(new TTypeProvider()));
+            return module;
+        }
+
+        public static Kontent WithInlineItemResolver<TContentType>(this Kontent module, IInlineContentItemsResolver<TContentType> resolver )
+        {
+            module.ConfigureClientActions.Add(builder => builder.WithInlineContentItemsResolver( resolver ));
+            return module;
+        }
+
+        public static Kontent WithInlineItemResolver<TContentType,TResolver>(this Kontent module) where TResolver : IInlineContentItemsResolver<TContentType>, new()
+        {
+            module.ConfigureClientActions.Add(builder => builder.WithInlineContentItemsResolver(new TResolver()));
             return module;
         }
 
