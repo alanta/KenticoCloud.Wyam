@@ -22,21 +22,11 @@ The Delivery Client supports [strong typed models](https://github.com/Kentico/ko
 
 In the test project, the `Models` folder contains the generated content models for the Kentico demo project. To regenerate the models, install the [Kontent generator](https://github.com/Kentico/kontent-generators-net) and use the following command:
 
-`KontentModelGenerator --projectid "00000000-0000-0000-0000-000000000000" --outputdir Models --namespace Kontent.Wyam.Tests.Models -s true -g true`
+```
+KontentModelGenerator --projectid "00000000-0000-0000-0000-000000000000" --outputdir Models --namespace Kontent.Wyam.Tests.Models -s true -g true
+```
 
 You will need to fill in the correct project id for your account. 
 This will generate a C# class for each content type defined in the project and also a `CustomTypeProvider` which allows the Delivery Client to map the JSON data to C# classes.
 
 Note that the models and the response JSON need to line up, so make sure they both come from the same project. The tests also check specific properties of the models so if you regenerate the models from a different project the tests will likely no longer compile.
-
-## Inline content
-
-Kontent allows you to have content within content. Which is very powerfull but requires a bit of work on the client side to make it work.
-You basically have two options:
-
-* _Inline resolvers_
-  These are called by the Kontent Delivery Client to transform inline content items into HTML. They're nice for simple models with very basic HTML.
-* _Structured content_
-  You can also use _structured content_ to get back blocks of HTML as well as the (strong typed) inline content items. It's then up to you to use a view engine like Razor to turn all that into HTML.
-
-Both these models can be used with Wyam, it's up to your preferences.
