@@ -7,11 +7,6 @@ using Kentico.Kontent.Delivery.Abstractions;
 using Kentico.Kontent.Delivery.Builders.DeliveryClient;
 using Kontent.Wyam.Metadata;
 using System;
-using System.Collections;
-using System.IO;
-using Wyam.Common.IO;
-using Wyam.Common.Meta;
-using Wyam.Core.Documents;
 
 namespace Kontent.Wyam
 {
@@ -37,35 +32,6 @@ namespace Kontent.Wyam
             Client = new Lazy<IDeliveryClient>(() => client);
         }
 
-        private IDeliveryClient CreateClient()
-        {
-            var builder = DeliveryClientBuilder
-                .WithOptions(options =>
-                {
-                    var opt2 = options.WithProjectId(ProjectId);
-                    
-                    if (!string.IsNullOrWhiteSpace(PreviewApiKey))
-                    {
-                        return opt2.UsePreviewApi(PreviewApiKey).Build();
-                    }
-
-                    if (!string.IsNullOrEmpty(ProductionApiKey))
-                    {
-                        return opt2.UseProductionApi(ProductionApiKey).Build();
-                    }
-
-                    return opt2.UseProductionApi().Build();
-
-                });
-
-            foreach (var action in ConfigureClientActions)
-            {
-                action(builder);
-            }
-
-            return builder.Build();
-        }
-
         /// <summary>
         /// Specifies the project ID to use for retrieving content items from Kentico Cloud.
         /// <seealso cref="!:https://developer.Kontent.com/docs/using-delivery-api#section-getting-project-id" />
@@ -88,6 +54,34 @@ namespace Kontent.Wyam
             Client = new Lazy<IDeliveryClient>(CreateClient);
         }
 
+        private IDeliveryClient CreateClient()
+        {
+            var builder = DeliveryClientBuilder
+                .WithOptions(options =>
+                {
+                    var opt2 = options.WithProjectId(ProjectId);
+
+                    if (!string.IsNullOrWhiteSpace(PreviewApiKey))
+                    {
+                        return opt2.UsePreviewApi(PreviewApiKey).Build();
+                    }
+
+                    if (!string.IsNullOrEmpty(ProductionApiKey))
+                    {
+                        return opt2.UseProductionApi(ProductionApiKey).Build();
+                    }
+
+                    return opt2.UseProductionApi().Build();
+
+                });
+
+            foreach (var action in ConfigureClientActions)
+            {
+                action(builder);
+            }
+
+            return builder.Build();
+        }
 
         public IEnumerable<IDocument> Execute(IReadOnlyList<IDocument> inputs, IExecutionContext context)
         {
