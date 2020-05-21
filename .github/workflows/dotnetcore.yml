@@ -26,3 +26,7 @@ jobs:
       run: dotnet build --configuration Release -p:Version=${{ steps.gitversion.outputs.nuGetVersionV2 }}
     - name: Test with dotnet
       run: dotnet test --configuration Release
+    - uses: actions/upload-artifact@v2
+      with:
+        name: nuget
+        path: **/Kontent.Wyam*.nupkg
