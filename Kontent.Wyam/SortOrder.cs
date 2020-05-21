@@ -1,4 +1,4 @@
-﻿namespace KenticoCloud.Wyam
+﻿namespace Kontent.Wyam
 {
     /// <summary>
     /// Sort order of content items retrieved from Kentico Cloud.

@@ -5,13 +5,13 @@ using Wyam.Common.Documents;
 using Wyam.Common.Execution;
 using Wyam.Common.Modules;
 
-namespace KenticoCloud.Wyam
+namespace Kontent.Wyam
 {
     /// <summary>
     /// Parses document content by replacing <c>!!assets/</c> paths with Kentico Cloud asset URLs.
     /// URLs are matched by the file name of the asset.
     /// </summary>
-    public class KenticoCloudAssetParser : IModule
+    public class KontentAssetParser : IModule
     {
         public IEnumerable<IDocument> Execute(IReadOnlyList<IDocument> inputs, IExecutionContext context)
         {
