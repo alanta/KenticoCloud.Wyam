@@ -30,6 +30,6 @@ jobs:
       with:
         name: nuget
         path: "**/Kontent.Wyam*.nupkg"
-    - outputs: 
-        nugetversion: ${{ steps.gitversion.outputs.nuGetVersionV2 }}
-        prerelease: ${{ steps.gitversion.outputs.preReleaseTag != '' }}
+    outputs: 
+      nugetversion: ${{ steps.gitversion.outputs.nuGetVersionV2 }}
+      prerelease: ${{ steps.gitversion.outputs.preReleaseTag != '' }}
