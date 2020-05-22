@@ -7,9 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontent.Wyam", "Kontent.Wya
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kontent.Wyam.Tests", "Kontent.Wyam.Tests\Kontent.Wyam.Tests.csproj", "{C20F703E-D66B-4DAF-A8B5-2BADC6B7A40D}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Actions", "Actions", "{2F7DACF5-7D47-4683-B7C9-A08726F3A8A8}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Workflows", "Workflows", "{2F7DACF5-7D47-4683-B7C9-A08726F3A8A8}"
 	ProjectSection(SolutionItems) = preProject
+		.github\workflows\build.yml = .github\workflows\build.yml
 		.github\workflows\dotnetcore.yml = .github\workflows\dotnetcore.yml
+		.github\workflows\release.yml = .github\workflows\release.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E6921A26-7A5F-48E1-A4BD-9D251B0ABE65}"
