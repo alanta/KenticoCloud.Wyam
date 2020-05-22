@@ -50,8 +50,7 @@ jobs:
         with:
           name: nuget
           path: ./
-      - run: |
-        ls -R
+      - run: ls -R
 
       - name: Create Release
         id: create_release
