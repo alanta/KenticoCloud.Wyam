@@ -18,4 +18,4 @@ jobs:
     - name: Publish package
       env:
         NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
-      run: dotnet nuget push ${{ github.event.release.assets[0].name }} --api-key $NUGET_API_KEY
+      run: dotnet nuget push ${{ github.event.release.assets[0].name }} --api-key $NUGET_API_KEY -s https://api.nuget.org/v3/index.json
