@@ -1,7 +1,7 @@
 on:
   push:
     # Sequence of patterns matched against refs/tags
-    branches: 
+    #branches: 
     #- master
     tags:
     - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
@@ -35,7 +35,7 @@ jobs:
     - uses: actions/upload-artifact@v2
       with:
         name: nuget
-        path: "**/Kontent.Wyam*.nupkg"
+        path: "./Kontent.Wyam/Kontent.Wyam/bin/Release/Kontent.Wyam.${{ steps.gitversion.outputs.nuGetVersionV2 }}.nupkg"
     outputs: 
       nugetversion: ${{ steps.gitversion.outputs.nuGetVersionV2 }}
       prerelease: ${{ steps.gitversion.outputs.preReleaseTag != '' }}
@@ -46,7 +46,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download build artifact
-        uses: actions/download-artifact@v1
+        uses: actions/download-artifact@v2
         with:
           name: nuget
 
@@ -67,6 +67,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-          asset_path: ./nuget.zip
+          asset_path: nuget
           asset_name: nuget-${{ needs.build.outputs.nugetversion }}.zip
           asset_content_type: application/zip
