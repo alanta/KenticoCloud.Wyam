@@ -35,7 +35,7 @@ jobs:
     - uses: actions/upload-artifact@v2
       with:
         name: nuget
-        path: "./Kontent.Wyam/Kontent.Wyam/bin/Release/Kontent.Wyam.${{ steps.gitversion.outputs.nuGetVersionV2 }}.nupkg"
+        path: "**/Kontent.Wyam*.nupkg"
     outputs: 
       nugetversion: ${{ steps.gitversion.outputs.nuGetVersionV2 }}
       prerelease: ${{ steps.gitversion.outputs.preReleaseTag != '' }}
