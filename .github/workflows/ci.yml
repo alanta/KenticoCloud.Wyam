@@ -1,6 +1,9 @@
 name: CI
 
-on: [push]
+on:
+  push:
+    tags-ignore:
+    - v* # Don't run CI build for version tag
 
 jobs:
   build:
