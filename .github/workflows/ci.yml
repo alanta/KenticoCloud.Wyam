@@ -3,7 +3,7 @@ name: CI
 on:
   push:
     branches: 
-    - *
+    - "*"
     tags-ignore:
     - v* # Don't run CI build for version tag
 
