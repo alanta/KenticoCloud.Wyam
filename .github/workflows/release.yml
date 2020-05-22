@@ -35,10 +35,11 @@ jobs:
     - uses: actions/upload-artifact@v2
       with:
         name: nuget
-        path: "**/Kontent.Wyam*.nupkg"
+        path: "./Kontent.Wyam/bin/Release/Kontent.Wyam.${{steps.gitversion.outputs.nuGetVersionV2}}.nupkg"
     outputs: 
       nugetversion: ${{ steps.gitversion.outputs.nuGetVersionV2 }}
       prerelease: ${{ steps.gitversion.outputs.preReleaseTag != '' }}
+      packagefile: "./Kontent.Wyam/bin/Release/Kontent.Wyam.${{steps.gitversion.outputs.nuGetVersionV2}}.nupkg"
 
   publish:
     needs: build
@@ -69,6 +70,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-          asset_path: ./Kontent.Wyam/bin/Release
-          asset_name: Release.zip
+          asset_path: ${{ needs.build.outputs.packagefile }}
+          asset_name: "Kontent.Wyam.${{needs.build.outputs.nugetversion}}.nupkg"
           asset_content_type: application/zip
