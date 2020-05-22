@@ -1,5 +1,5 @@
 steps:
-- uses: actions/checkout@v2
+# assumes code is checked out!
 - name: Fetch all history for all tags and branches
     run: git fetch --prune --unshallow
 - name: Install GitVersion
