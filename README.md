@@ -4,6 +4,10 @@
 
 Module for retrieving [Kentico Kontent](https://kontent.ai) content items, for generating static websites with [Wyam](https://wyam.io).
 
+> ⚠️ [Wyam](https://github.com/Wyamio/Wyam) is succeeded by [Statiq](https://github.com/statiqdev/Statiq.Framework) <br/>
+> If you're starting a new static site project with Kontent, please use [Kontent.Statiq](https://github.com/alanta/Kontent.Statiq).
+> There will be no active development on this repository, PRs are still welcome though.
+
 ## Getting started
 
 * Setup a project on [Kontent](https://app.kontent.ai/sign-up). You can use the [demo project](https://docs.kontent.ai/tutorials/set-up-kontent/projects/manage-projects#a-creating-a-sample-project) to get going.
